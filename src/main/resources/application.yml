@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/./nova_home
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 1234
+  jpa:
+    show-sql: true
+    database: h2
+#    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+logging.level:
+  org.hibernate.SQL: debug
+
+jwt:
+  header: Authorization
+  secret: Tm92YUhvbWVQYWdlc2FkZmFzZGZhc2RmYXNkZnNhZGY=
+  # NovaHomePagesadfasdfasdfasdfsadf
+  access-token-validity-in-seconds: 600 # 10 min

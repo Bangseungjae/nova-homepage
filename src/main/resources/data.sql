@@ -1,0 +1,2 @@
+INSERT INTO USERS (user_id, student_number, password, ssn, role) VALUES(1, 2020039110, 'sj991209', 991209, 'ROLE_USER');
+INSERT INTO USERS (user_id, student_number, password, ssn, role) VALUES(2, 2020039222, 'test123', 123456, 'ROLE_ADMIN');
