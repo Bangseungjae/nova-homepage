@@ -8,6 +8,8 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,32 +34,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                         .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                                .exceptionHandling()
-                                        .authenticationEntryPoint(jwtAuthenticationEntryFilter)
-                                                .accessDeniedHandler(jwtAccessDeniedHandler)
-                                                        .and()
-                                                                .headers()
-                                                                        .frameOptions()
-                                                                                .sameOrigin()
-                                                                                        ;
+                        .addFilterBefore(filterSecurityInterceptor(), FilterSecurityInterceptor.class)
+                        .exceptionHandling()
+                        .authenticationEntryPoint(jwtAuthenticationEntryFilter)
+                        .accessDeniedHandler(jwtAccessDeniedHandler)
+                        .and()
+                        .headers()
+                        .frameOptions()
+                        .sameOrigin()
+                        ;
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
                         .antMatchers("/login").permitAll()
                         .antMatchers("/users").permitAll()
-                .antMatchers("/admin/users/**").hasRole("[ROLE_ADMIN]")
-/*                .and()
-                .addFilterAt(filterSecurityInterceptor(), FilterSecurityInterceptor.class)*/;
+//                .antMatchers("/admin/users/**").hasRole("[ROLE_ADMIN]")
+                ;
 
         http.apply(new JwtSecurityConfig(tokenProvider));
-
-
     }
-
 
 //    @Bean
     public FilterSecurityInterceptor filterSecurityInterceptor() throws Exception {
@@ -74,7 +74,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private AccessDecisionManager affirmativeBased() {
         AffirmativeBased affirmativeBased = new AffirmativeBased(getAccessDecisionVoters());
-
         return affirmativeBased;
     }
 
@@ -83,13 +82,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    private List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
+    @Bean
+    public List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
         List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
         accessDecisionVoters.add(roleVoter());
         return accessDecisionVoters;
     }
 
-    private AccessDecisionVoter<? extends Object> roleVoter() {
+    @Bean
+    public AccessDecisionVoter<? extends Object> roleVoter() {
         RoleHierarchyVoter roleHierarchyVoter = new RoleHierarchyVoter(roleHierachy());
         return roleHierarchyVoter;
     }

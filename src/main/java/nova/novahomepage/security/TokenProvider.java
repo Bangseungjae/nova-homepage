@@ -3,12 +3,13 @@ package nova.novahomepage.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.*;
@@ -49,7 +50,7 @@ public class TokenProvider {
     }
 
     // 토큰을 받아 클레임을 만들고 권한정보를 빼서 시큐리티 유저객체를 만들어 Authentication 객체 반환
-    public Authentication getAuthentication(String token) {
+    public Authentication authenticate(String token) {
         Claims claims = Jwts
                 .parserBuilder()
                 .setSigningKey(key)
@@ -84,4 +85,6 @@ public class TokenProvider {
         }
         return false;
     }
+
+
 }
