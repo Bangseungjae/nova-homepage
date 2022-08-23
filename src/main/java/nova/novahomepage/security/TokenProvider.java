@@ -61,7 +61,7 @@ public class TokenProvider {
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-        log.info("authorities : {}" + authorities);
+        log.info("authorities : {}", authorities);
         log.info("claims : {}", claims);
 
         User principal = new User(claims.getSubject(), "", authorities);

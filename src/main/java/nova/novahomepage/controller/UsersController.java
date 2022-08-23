@@ -21,6 +21,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +30,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -53,14 +57,16 @@ public class UsersController {
         return ResponseEntity.status(HttpStatus.CREATED).body(requestUser);
     }
 
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN')") // ADMIN 권한만 호출 가능
 //    @Secured(Role.ADMIN)
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("admin/users/{number}")
     public ResponseEntity signup(@PathVariable(name = "number") String studentNumber) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("/admin/users authorities : {}", authentication.getAuthorities());
         log.info("=========signup() start=========");
         PreUsers user = preUsersService.findUser(studentNumber);
         ModelMapper mapper = new ModelMapper();
-        List<Authority> authorities = new ArrayList<>();
+        Set<Authority> authorities = new HashSet<>();
         authorities.add(Authority.builder().name(Role.USER).build());
         Users saveUser = Users.builder()
                 .studentNumber(user.getStudentNumber())
@@ -76,7 +82,7 @@ public class UsersController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseLogin> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<ResponseLogin> login(@Valid @RequestBody LoginDto loginDto) {
         log.info("========login start========");
         ResponseLogin token = authService.authenticate(loginDto.getStudentNumber(), loginDto.getPassword());
 

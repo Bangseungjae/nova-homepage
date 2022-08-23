@@ -13,9 +13,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -29,9 +27,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Transactional
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        List<Authority> authorities1 = new ArrayList<>();
+        Set<Authority> authorities1 = new HashSet<>();
         authorities1.add(new Authority(Role.USER));
-        List<Authority> authorities2 = new ArrayList<>();
+        Set<Authority> authorities2 = new HashSet<>();
         authorities2.add(new Authority(Role.ADMIN));
         createUserIfNotFound("방승재", "2020039110", "sj991209", 991209, authorities1);
         createUserIfNotFound("김상수", "2929110110", "tset1234", 991209, authorities2);
@@ -39,9 +37,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createPreUserIfNotFound("나미", "2022030311", "test1234", 001234);
     }
 
-    private void createUserIfNotFound(String name, String studentNumber, String password, Integer ssn, List<Authority> authorities) {
+    private void createUserIfNotFound(String name, String studentNumber, String password, Integer ssn, Set<Authority> authorities) {
         Optional<Users> usersOptional = usersRepository.findByStudentNumber(studentNumber);
-        Users user = new Users();
+        Users user = null;
         if (usersOptional.isEmpty()) {
 
             user = Users.builder()
@@ -51,7 +49,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                     .ssn(ssn)
                     .authority(authorities)
                     .build();
-            usersService.signup(user);
+            usersRepository.save(user);
         }
         return;
     }

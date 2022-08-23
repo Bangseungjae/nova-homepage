@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -35,7 +36,7 @@ public class Users {
             name = "user_id",
     joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
     inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_id")})
-    private List<Authority> authority = new ArrayList<>();
+    private Set<Authority> authority;
 
 
     public void setEncodedPassword(String password) {

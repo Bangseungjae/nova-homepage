@@ -44,6 +44,7 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         // 저장
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        log.info("authentication : {}", authentication);
 
         // 인증정보를 기준으로 jwt access 토큰 생성
         String token = tokenProvider.createToken(authentication);

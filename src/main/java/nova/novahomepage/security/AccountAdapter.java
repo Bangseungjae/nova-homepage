@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -19,7 +20,7 @@ public class AccountAdapter extends User {
         super(users.getStudentNumber(), users.getPassword(), authorities(users.getAuthority()));
     }
 
-    private static List<GrantedAuthority> authorities(List<Authority> authorities) {
+    private static List<GrantedAuthority> authorities(Set<Authority> authorities) {
         log.info("authority: {}", authorities);
         return authorities.stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getName()))
