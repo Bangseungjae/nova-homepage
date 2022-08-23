@@ -58,7 +58,7 @@ public class UsersController {
     }
 
 //    @PreAuthorize("hasAnyRole('ROLE_ADMIN')") // ADMIN 권한만 호출 가능
-//    @Secured(Role.ADMIN)
+    @Secured(Role.ADMIN)
     @PostMapping("admin/users/{number}")
     public ResponseEntity signup(@PathVariable(name = "number") String studentNumber) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

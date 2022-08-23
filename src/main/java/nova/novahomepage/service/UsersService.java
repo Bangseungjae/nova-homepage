@@ -24,7 +24,6 @@ public class UsersService {
 
 //    @RolesAllowed("[ROLE_ADMIN]")
     @Transactional
-    @Secured("ROLE_ADMIN")
     public void signup(Users users) {
 
         if (users == null) {

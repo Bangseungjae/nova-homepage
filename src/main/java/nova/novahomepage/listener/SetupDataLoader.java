@@ -31,8 +31,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         authorities1.add(new Authority(Role.USER));
         Set<Authority> authorities2 = new HashSet<>();
         authorities2.add(new Authority(Role.ADMIN));
+//        authorities2.add(new Authority(Role.USER));
         createUserIfNotFound("방승재", "2020039110", "sj991209", 991209, authorities1);
-        createUserIfNotFound("김상수", "2929110110", "tset1234", 991209, authorities2);
+        createUserIfNotFound("김상수", "2929110110", "test1234", 991209, authorities2);
 
         createPreUserIfNotFound("나미", "2022030311", "test1234", 001234);
     }
@@ -49,7 +50,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                     .ssn(ssn)
                     .authority(authorities)
                     .build();
-            usersRepository.save(user);
+            usersService.signup(user);
         }
         return;
     }

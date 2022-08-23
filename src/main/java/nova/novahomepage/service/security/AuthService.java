@@ -54,6 +54,7 @@ public class AuthService {
     }
 
     private void matchPassword(String password, Users user) {
+        log.info("password : {}", user.getPassword());
         boolean matches = passwordEncoder.matches(password, user.getPassword());
         log.info("======match start======");
         if (!matches) {

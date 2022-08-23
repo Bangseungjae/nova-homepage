@@ -9,12 +9,12 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 public class SecurityInitializer implements ApplicationRunner {
 
     @Autowired
-    private RoleHierarchyService roleHierachyService;
+    private RoleHierarchyService roleHierarchyService;
     @Autowired
     private RoleHierarchyImpl roleHierarchy;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        roleHierarchy.setHierarchy(roleHierachyService.findAllHierarchy());
+        roleHierarchy.setHierarchy(roleHierarchyService.findAllHierarchy());
     }
 }

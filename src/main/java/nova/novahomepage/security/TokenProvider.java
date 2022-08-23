@@ -35,9 +35,9 @@ public class TokenProvider {
 
     // 토큰 생성
     public String createToken(Authentication authentication) {
-        List<String> authorities = authentication.getAuthorities().stream()
+        String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+                .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
@@ -46,6 +46,7 @@ public class TokenProvider {
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS256)
+                .setExpiration(validity)
                 .compact();
     }
 
