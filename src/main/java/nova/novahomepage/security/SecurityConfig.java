@@ -2,7 +2,14 @@ package nova.novahomepage.security;
 
 import lombok.RequiredArgsConstructor;
 import nova.novahomepage.security.handler.JwtAccessDeniedHandler;
+import nova.novahomepage.security.metadatasource.FilterInvocationMetaDaTaSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -10,8 +17,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @EnableWebSecurity
@@ -41,6 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterAfter(getFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
                         ;
         http.authorizeRequests()
                         .antMatchers("/login").permitAll()
@@ -54,42 +68,50 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-//   @Bean
-//    public FilterSecurityInterceptor filterSecurityInterceptor() throws Exception {
-//        FilterSecurityInterceptor permitAllFilter = new FilterSecurityInterceptor();
-//        permitAllFilter.setAuthenticationManager(authenticationManagerBean());
-//        permitAllFilter.setAccessDecisionManager(affirmativeBased());
-//        return permitAllFilter;
-//    }
-//
-//
-//    private AccessDecisionManager affirmativeBased() {
-//        AffirmativeBased affirmativeBased = new AffirmativeBased(getAccessDecisionVoters());
-//        return affirmativeBased;
-//    }
-//
-//    @Override
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
-//
-//    @Bean
-//    public List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
-//        List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
-//        accessDecisionVoters.add(roleVoter());
-//        return accessDecisionVoters;
-//    }
-//
-//    @Bean
-//    public AccessDecisionVoter<? extends Object> roleVoter() {
-//        RoleHierarchyVoter roleHierarchyVoter = new RoleHierarchyVoter(roleHierachy());
-//        return roleHierarchyVoter;
-//    }
-//
-//    @Bean
-//    public RoleHierarchyImpl roleHierachy() {
-//        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-//        return roleHierarchy;
-//    }
+    @Bean(name = "filterSecurityInterceptor")
+    public FilterSecurityInterceptor getFilterSecurityInterceptor() throws Exception {
+        FilterSecurityInterceptor interceptor = new FilterSecurityInterceptor();
+        interceptor.setAccessDecisionManager(affirmativeBased());
+        interceptor.setSecurityMetadataSource(getReloadableFilterInvocationSecurityMetadataSource());
+
+        return interceptor;
+    }
+
+    @Bean(name = "filterInvocationSecurityMetadataSource")
+    public FilterInvocationSecurityMetadataSource getReloadableFilterInvocationSecurityMetadataSource() {
+        return new FilterInvocationMetaDaTaSource();
+    }
+
+
+    @Bean
+    public AccessDecisionManager affirmativeBased() {
+        AffirmativeBased affirmativeBased = new AffirmativeBased(getAccessDecisionVoters());
+        return affirmativeBased;
+    }
+
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
+        List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
+        accessDecisionVoters.add(roleVoter());
+        return accessDecisionVoters;
+    }
+
+    @Bean
+    public AccessDecisionVoter<? extends Object> roleVoter() {
+        RoleHierarchyVoter roleHierarchyVoter = new RoleHierarchyVoter(roleHierarchy());
+        return roleHierarchyVoter;
+    }
+
+    @Bean
+    public RoleHierarchyImpl roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER\nROLE_USER > ROLE_READ");
+        return roleHierarchy;
+    }
 
 }

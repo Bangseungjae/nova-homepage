@@ -57,13 +57,12 @@ public class UsersController {
         return ResponseEntity.status(HttpStatus.CREATED).body(requestUser);
     }
 
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN')") // ADMIN 권한만 호출 가능
-    @Secured(Role.ADMIN)
+//    @Secured(Role.USER)
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     @PostMapping("admin/users/{number}")
     public ResponseEntity signup(@PathVariable(name = "number") String studentNumber) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("/admin/users authorities : {}", authentication.getAuthorities());
-        log.info("=========signup() start=========");
+        log.info("authorities : {}", authentication.getAuthorities());
         PreUsers user = preUsersService.findUser(studentNumber);
         ModelMapper mapper = new ModelMapper();
         Set<Authority> authorities = new HashSet<>();

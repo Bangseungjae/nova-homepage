@@ -12,7 +12,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.http.HttpHeaders;
 
 @Slf4j
 public class JwtFilter extends GenericFilterBean {
@@ -27,6 +29,7 @@ public class JwtFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         String jwt = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
 
@@ -35,7 +38,9 @@ public class JwtFilter extends GenericFilterBean {
             // 토큰에서 유저네임, 권한을 뽑아 스프링 시큐리티 유저를 만들어 Authentication 반환
             Authentication authentication = tokenProvider.authenticate(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = tokenProvider.createToken(authentication);
             log.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+            httpServletResponse.setHeader(AUTHORIZATION_HEADER, token);
         } else {
             log.info("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
         }

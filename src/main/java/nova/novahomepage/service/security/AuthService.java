@@ -37,14 +37,12 @@ public class AuthService {
 
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(studentNumber, password);
-        log.info("studentNumber: {}, password: {}", studentNumber, password);
+
         // authenticationToken 객체를 통해 Authentication 객체 생성
         // 이 과정에서 CustomUserDetailsService 에서 우리가 재정의한 loadUserByUsername 메서드 호출
-        log.info("authenticationToken: {}", authenticationToken);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         // 저장
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.info("authentication : {}", authentication);
 
         // 인증정보를 기준으로 jwt access 토큰 생성
         String token = tokenProvider.createToken(authentication);
