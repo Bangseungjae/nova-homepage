@@ -1,4 +1,4 @@
-package nova.novahomepage.security;
+package nova.novahomepage.security.filter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
