@@ -11,19 +11,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.security.RolesAllowed;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class UsersService {
     private final UsersRepository usersRepository;
     private final PreUsersRepository preUsersRepository;
     private final PasswordEncoder passwordEncoder;
 
-//    @RolesAllowed("[ROLE_ADMIN]")
-    @Transactional
     public void signup(Users users) {
 
         if (users == null) {
@@ -38,5 +37,22 @@ public class UsersService {
         log.info("encoded Password:  " + encode);
         users.setEncodedPassword(encode);
         usersRepository.save(users);
+    }
+
+    public void delete(String studentNumber) {
+        Users users = usersRepository.findByStudentNumber(studentNumber)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 없습니다."));
+        usersRepository.delete(users);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Users> allUsers() {
+        return usersRepository.findAll();
+    }
+
+    public Users findUser(String studentNumber) {
+        return usersRepository.findByStudentNumber(studentNumber)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 없습니다."));
+
     }
 }

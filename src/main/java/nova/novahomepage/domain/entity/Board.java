@@ -2,16 +2,19 @@ package nova.novahomepage.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Board {
+@Getter
+public class Board implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +24,15 @@ public class Board {
     private String title;
     private String content;
     private Integer good;
-    @Column(name = "number_of_view")
-    private Integer numberOfView;
 
-    @OneToMany(mappedBy = "board")
-    private List<Chatting> chattings;
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Chatting> chatting;
+
+    @ManyToOne
+    private Users users;
+
+    public void changeBoard(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

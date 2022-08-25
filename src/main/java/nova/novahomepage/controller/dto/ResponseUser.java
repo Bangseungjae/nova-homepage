@@ -1,8 +1,6 @@
 package nova.novahomepage.controller.dto;
 
-
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,13 +11,9 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class RequestSignUp {
+public class ResponseUser {
     @Size(min = 10, max = 10)
     private String studentNumber;
-
-    @Size(min = 6, max = 16)
-    private String password;
 
     String name;
 
@@ -27,4 +21,5 @@ public class RequestSignUp {
     @Max(999999)
     @Size(min = 6, max = 6)
     private Integer ssn; // 주민번호
+
 }

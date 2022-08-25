@@ -3,7 +3,7 @@ package nova.novahomepage.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Getter @Setter
-public class Users {
+public class Users implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,12 +32,13 @@ public class Users {
     BusinessCard businessCard;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_id",
+    @JoinTable(name = "user_id",
     joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
     inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_id")})
     private Set<Authority> authority;
 
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Board> board;
 
     public void setEncodedPassword(String password) {
         this.password = password;

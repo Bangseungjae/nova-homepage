@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "pre_users")
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Builder
-public class PreUsers {
+public class PreUsers implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

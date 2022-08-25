@@ -7,12 +7,13 @@ import lombok.NoArgsConstructor;
 import nova.novahomepage.domain.entity.Board;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Chatting {
+public class Chatting implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +22,7 @@ public class Chatting {
 
     private String chat;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Board board;
 
 }

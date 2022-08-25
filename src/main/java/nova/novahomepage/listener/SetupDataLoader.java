@@ -3,6 +3,7 @@ package nova.novahomepage.listener;
 import lombok.RequiredArgsConstructor;
 import nova.novahomepage.domain.Role;
 import nova.novahomepage.domain.entity.Authority;
+import nova.novahomepage.domain.entity.BusinessCard;
 import nova.novahomepage.domain.entity.PreUsers;
 import nova.novahomepage.domain.entity.Users;
 import nova.novahomepage.repository.PreUsersRepository;
@@ -32,14 +33,19 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Set<Authority> authorities2 = new HashSet<>();
         authorities2.add(new Authority(Role.ADMIN));
         createUserIfNotFound("방승재", "2020039110", "sj991209", 991209, authorities1);
-        createUserIfNotFound("김상수", "2929110110", "test1234", 991209, authorities2);
+        createUserIfNotFound("김상수", "2929110110", "test1234", 981209, authorities2);
 
         createPreUserIfNotFound("나미", "2022030311", "test1234", 001234);
+        createPreUserIfNotFound("우솝", "2051090112", "test1234", 001234);
+        createPreUserIfNotFound("루피", "1231231232", "test1234", 001234);
     }
 
     private void createUserIfNotFound(String name, String studentNumber, String password, Integer ssn, Set<Authority> authorities) {
         Optional<Users> usersOptional = usersRepository.findByStudentNumber(studentNumber);
         Users user = null;
+        BusinessCard businessCard = BusinessCard.builder()
+                .name(name)
+                .build();
         if (usersOptional.isEmpty()) {
 
             user = Users.builder()
@@ -48,6 +54,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                     .password(password)
                     .ssn(ssn)
                     .authority(authorities)
+                    .businessCard(businessCard)
                     .build();
             usersService.signup(user);
         }
@@ -58,6 +65,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     public void createPreUserIfNotFound(String name, String studentNumber,  String password,Integer ssn) {
         Optional<PreUsers> preUsersOptional = preUsersRepository.findByStudentNumber(studentNumber);
         PreUsers preUsers = null;
+
         if (preUsersOptional.isEmpty()) {
             preUsers = PreUsers.builder()
                     .name(name)
