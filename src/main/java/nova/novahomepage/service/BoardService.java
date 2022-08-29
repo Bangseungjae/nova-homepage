@@ -2,6 +2,7 @@ package nova.novahomepage.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nova.novahomepage.controller.dto.ChangeBoardDto;
 import nova.novahomepage.domain.entity.Board;
 import nova.novahomepage.repository.BoardRepository;
 import nova.novahomepage.repository.UsersRepository;
@@ -30,16 +31,23 @@ public class BoardService {
         boardRepository.save(board);
     }
 
-    public void updateBoard(Board board) {
-        Board updateBoard = boardRepository.findById(board.getId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 값입니다."));
-        updateBoard.changeBoard(board.getTitle(), board.getContent());
+    public void updateBoard(Long id, ChangeBoardDto changeBoardDto) {
+        Board updateBoard = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다."));
+        updateBoard.changeBoard(changeBoardDto.getTitle(), changeBoardDto.getContent(), changeBoardDto.getTypeName());
     }
 
-    public void deleteBoard(Board board) {
+    public void deleteBoard(Long id) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다."));
         if (board.getId() == null) {
             throw new IllegalArgumentException("지울 게시판 id가 없습니다.");
         }
         boardRepository.delete(board);
+    }
+
+    public Board getBoard(Long id) {
+        return boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다."));
     }
 }

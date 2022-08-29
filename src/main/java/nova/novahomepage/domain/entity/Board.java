@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,14 +26,15 @@ public class Board implements Serializable {
     private String content;
     private Integer good;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<Chatting> chatting;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Chatting> chatting = new ArrayList<>();
 
     @ManyToOne
     private Users users;
 
-    public void changeBoard(String title, String content) {
+    public void changeBoard(String title, String content, String typeName) {
         this.title = title;
         this.content = content;
+        this.typeName = typeName;
     }
 }

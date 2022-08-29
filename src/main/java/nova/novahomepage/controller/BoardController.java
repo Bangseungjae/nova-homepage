@@ -4,16 +4,20 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nova.novahomepage.controller.dto.BoardDto;
+import nova.novahomepage.controller.dto.ChangeBoardDto;
 import nova.novahomepage.domain.entity.Board;
+import nova.novahomepage.domain.entity.Chatting;
 import nova.novahomepage.domain.entity.Users;
 import nova.novahomepage.service.BoardService;
 import nova.novahomepage.service.UsersService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -39,5 +43,41 @@ public class BoardController {
                 .good(0)
                 .build();
         boardService.makeBoard(board);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @GetMapping("/board/{id}")
+    public ResponseEntity<BoardDto> getBoard(@PathVariable Long id) {
+        Board board = boardService.getBoard(id);
+        List<String> chat = new ArrayList<>();
+        List<Chatting> chatting = board.getChatting();
+        for (Chatting c : chatting) {
+            chat.add(c.getChat());
+        }
+        BoardDto boardDto = BoardDto.builder()
+                .chatting(chat)
+                .content(board.getContent())
+                .title(board.getTitle())
+                .writer(board.getUsers().getName())
+                .studentNumber(board.getUsers().getStudentNumber())
+                .good(board.getGood())
+                .id(board.getId())
+                .build();
+        return ResponseEntity.ok().body(boardDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @DeleteMapping("/board/{id}")
+    public ResponseEntity deleteBoard(@PathVariable Long id) {
+        boardService.deleteBoard(id);
+        return ResponseEntity.ok().body(null);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PutMapping("/board/{id}")
+    public ResponseEntity updateBoard(@PathVariable(name = "id") Long id, @RequestBody ChangeBoardDto changeBoardDto) {
+        log.info("ChangeBoardDto = {}", changeBoardDto);
+        boardService.updateBoard(id, changeBoardDto);
+        return ResponseEntity.ok().body(null);
     }
 }

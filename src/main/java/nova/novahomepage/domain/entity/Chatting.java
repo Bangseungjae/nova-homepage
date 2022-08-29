@@ -13,6 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
 public class Chatting implements Serializable {
 
     @Id
@@ -21,8 +22,5 @@ public class Chatting implements Serializable {
     private Long id;
 
     private String chat;
-
-    @ManyToOne
-    private Board board;
 
 }

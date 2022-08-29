@@ -6,24 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
-@AllArgsConstructor
-@Builder
-@NoArgsConstructor
 @Data
-public class BoardDto {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class ChangeBoardDto {
 
-    private Long id;
-    @NotNull
-    private String typeName;
     @NotNull
     private String title;
     @NotNull
     private String content;
-    private Integer good;
-
-    private List<String> chatting;
-    private String writer;
-    private String studentNumber;
+    @NotNull
+    private String typeName;
 }

@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResponseLogin {
     private String accessToken;
+    private String studentNumber;
 }

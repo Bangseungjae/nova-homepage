@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,8 +23,8 @@ public class BusinessCard implements Serializable {
     @Column(name = "business_card_id")
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "businessCard")
-    private List<Skill> skills;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Skill> skills = new ArrayList<>();
     private String name;
     private String gitLink;
 

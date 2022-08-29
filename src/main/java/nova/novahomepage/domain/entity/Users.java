@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,10 +37,13 @@ public class Users implements Serializable {
     @JoinTable(name = "user_authority",
     joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
     inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "authority_id")})
-    private Set<Authority> authority;
+    private Set<Authority> authority = new HashSet<>();
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
-    private List<Board> board;
+    private List<Board> board = new ArrayList<>();
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Project> projects = new ArrayList<>();
 
     public void setEncodedPassword(String password) {
         this.password = password;

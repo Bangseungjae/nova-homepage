@@ -22,10 +22,4 @@ public class Skill implements Serializable {
 
     @Column(name = "skill_name")
     private String skillName;
-
-    @ManyToOne
-    @JoinColumn(name = "business_card_id")
-    private BusinessCard businessCard;
-
-
 }
