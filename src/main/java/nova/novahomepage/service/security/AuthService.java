@@ -48,6 +48,7 @@ public class AuthService {
         String token = tokenProvider.createToken(authentication);
         return ResponseLogin.builder()
                 .accessToken(token)
+                .studentNumber(studentNumber)
                 .build();
     }
 
