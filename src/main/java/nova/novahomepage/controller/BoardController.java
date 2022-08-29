@@ -1,5 +1,6 @@
 package nova.novahomepage.controller;
 
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nova.novahomepage.controller.dto.BoardDto;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@Api(tags = "게시판 API를 제공하는 Controller")
 public class BoardController {
 
     private final BoardService boardService;

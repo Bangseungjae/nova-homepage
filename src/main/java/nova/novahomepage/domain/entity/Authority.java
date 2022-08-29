@@ -22,8 +22,6 @@ public class Authority implements Serializable {
     @Column(name = "authority_name")
     private String name;
 
-//    @ManyToOne()
-//    Users users;
 
     public Authority(String name) {
         this.name = name;

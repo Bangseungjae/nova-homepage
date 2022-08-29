@@ -39,7 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/h2/**");
+                .antMatchers("/h2/**")
+                .antMatchers("/swagger-ui/**")
+                .antMatchers("/swagger-resources/**");
     }
 
     @Override
@@ -59,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                         .antMatchers("/login").permitAll()
                         .antMatchers("/users").permitAll()
+                        .antMatchers("/password").permitAll()
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider))
                 ;

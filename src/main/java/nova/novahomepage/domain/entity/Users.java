@@ -32,9 +32,9 @@ public class Users implements Serializable {
     BusinessCard businessCard;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_id",
+    @JoinTable(name = "user_authority",
     joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
-    inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_id")})
+    inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "authority_id")})
     private Set<Authority> authority;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import nova.novahomepage.domain.Role;
 import nova.novahomepage.domain.entity.Users;
 import nova.novahomepage.repository.PreUsersRepository;
+import nova.novahomepage.repository.UsersQueryDsl;
 import nova.novahomepage.repository.UsersRepository;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,7 @@ import java.util.Optional;
 public class UsersService {
     private final UsersRepository usersRepository;
     private final PreUsersRepository preUsersRepository;
+    private final UsersQueryDsl usersQueryDsl;
     private final PasswordEncoder passwordEncoder;
 
     public void signup(Users users) {
@@ -53,6 +55,17 @@ public class UsersService {
     public Users findUser(String studentNumber) {
         return usersRepository.findByStudentNumber(studentNumber)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원이 없습니다."));
+    }
 
+    public Boolean isUser(Users users, Integer ssn) {
+        if (users.getSsn().equals(ssn)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void changePassword(String studentNumber, String password) {
+        String encode = passwordEncoder.encode(password);
+        usersQueryDsl.changePassword(studentNumber, encode);
     }
 }

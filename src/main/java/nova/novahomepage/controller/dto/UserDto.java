@@ -1,6 +1,8 @@
 package nova.novahomepage.controller.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +13,8 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseUser {
+@Builder
+public class UserDto {
     @Size(min = 10, max = 10)
     private String studentNumber;
 
@@ -19,7 +22,9 @@ public class ResponseUser {
 
     @Min(1000)
     @Max(999999)
-    @Size(min = 6, max = 6)
+    @ApiModelProperty(value = "주민번호", example = "주민번호")
     private Integer ssn; // 주민번호
 
+    @ApiModelProperty(value = "결과", example = "결과")
+    private Boolean res;
 }
