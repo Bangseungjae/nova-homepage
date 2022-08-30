@@ -2,10 +2,14 @@ package nova.novahomepage.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nova.novahomepage.controller.dto.BoardPageDto;
 import nova.novahomepage.controller.dto.ChangeBoardDto;
 import nova.novahomepage.domain.entity.Board;
 import nova.novahomepage.repository.BoardRepository;
 import nova.novahomepage.repository.UsersRepository;
+import nova.novahomepage.repository.dsl.BoardQueryDsl;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -17,6 +21,7 @@ import javax.transaction.Transactional;
 @Slf4j
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final BoardQueryDsl boardQueryDsl;
 
     public void makeBoard(Board board) {
         log.info("board Content: {}", board.getContent());
@@ -50,4 +55,9 @@ public class BoardService {
         return boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시판이 없습니다."));
     }
+
+    public Page<BoardPageDto> allBoardByType(Pageable pageable, String typeName) {
+        return boardQueryDsl.findAllBoardByType(typeName, pageable);
+    }
+
 }

@@ -1,4 +1,4 @@
-package nova.novahomepage.repository;
+package nova.novahomepage.repository.dsl;
 
 import com.querydsl.core.QueryFactory;
 import com.querydsl.jpa.impl.JPAQueryFactory;

@@ -1,15 +1,19 @@
 package nova.novahomepage.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nova.novahomepage.controller.dto.BoardDto;
+import nova.novahomepage.controller.dto.BoardPageDto;
 import nova.novahomepage.controller.dto.ChangeBoardDto;
 import nova.novahomepage.domain.entity.Board;
 import nova.novahomepage.domain.entity.Chatting;
 import nova.novahomepage.domain.entity.Users;
 import nova.novahomepage.service.BoardService;
 import nova.novahomepage.service.UsersService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -79,5 +83,13 @@ public class BoardController {
         log.info("ChangeBoardDto = {}", changeBoardDto);
         boardService.updateBoard(id, changeBoardDto);
         return ResponseEntity.ok().body(null);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_READ')")
+    @ApiOperation(value = "게시판에 따라 페이징된 게시글을 제공 ex) http://localhost:8080/all-board?page=0&size=10&typeName=type")
+    @GetMapping("/all-board")
+    public ResponseEntity<Page<BoardPageDto>> allBoardByTypeName(Pageable pageable, String typeName) {
+        Page<BoardPageDto> boardPageDtos = boardService.allBoardByType(pageable, typeName);
+        return ResponseEntity.ok().body(boardPageDtos);
     }
 }

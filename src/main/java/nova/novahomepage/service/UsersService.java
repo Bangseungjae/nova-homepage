@@ -2,12 +2,10 @@ package nova.novahomepage.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nova.novahomepage.domain.Role;
 import nova.novahomepage.domain.entity.Users;
 import nova.novahomepage.repository.PreUsersRepository;
-import nova.novahomepage.repository.UsersQueryDsl;
+import nova.novahomepage.repository.dsl.UsersQueryDsl;
 import nova.novahomepage.repository.UsersRepository;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

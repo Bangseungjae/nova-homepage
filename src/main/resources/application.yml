@@ -1,9 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:h2:tcp://localhost/./nova_home
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: 1234
   jpa:
     show-sql: true
     database: h2
@@ -17,6 +12,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  profiles:
+    active: dev
 logging.level:
   org.hibernate.SQL: debug
 

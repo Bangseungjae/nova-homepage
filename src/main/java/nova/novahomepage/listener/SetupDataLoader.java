@@ -2,12 +2,11 @@ package nova.novahomepage.listener;
 
 import lombok.RequiredArgsConstructor;
 import nova.novahomepage.domain.Role;
-import nova.novahomepage.domain.entity.Authority;
-import nova.novahomepage.domain.entity.BusinessCard;
-import nova.novahomepage.domain.entity.PreUsers;
-import nova.novahomepage.domain.entity.Users;
+import nova.novahomepage.domain.entity.*;
+import nova.novahomepage.repository.BoardRepository;
 import nova.novahomepage.repository.PreUsersRepository;
 import nova.novahomepage.repository.UsersRepository;
+import nova.novahomepage.service.BoardService;
 import nova.novahomepage.service.UsersService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -25,6 +24,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private final UsersRepository usersRepository;
     private final UsersService usersService;
     private final PreUsersRepository preUsersRepository;
+    private final BoardService boardService;
+    private final BoardRepository boardRepository;
+
     @Transactional
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -38,7 +40,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createPreUserIfNotFound("나미", "2022030311", "test1234", 001234);
         createPreUserIfNotFound("우솝", "2051090112", "test1234", 001234);
         createPreUserIfNotFound("루피", "1231231232", "test1234", 001234);
+
+        Users users = usersRepository.findByStudentNumber("2020039110").get();
+
+        for (int i = 0; i < 51; i++) {
+            createBoard("type", "title", "내용물", i, users);
+        }
     }
+
 
     private void createUserIfNotFound(String name, String studentNumber, String password, Integer ssn, Set<Authority> authorities) {
         Optional<Users> usersOptional = usersRepository.findByStudentNumber(studentNumber);
@@ -61,7 +70,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         return;
     }
 
-    @Transactional
     public void createPreUserIfNotFound(String name, String studentNumber,  String password,Integer ssn) {
         Optional<PreUsers> preUsersOptional = preUsersRepository.findByStudentNumber(studentNumber);
         PreUsers preUsers = null;
@@ -74,6 +82,21 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                     .password(password)
                     .build();
             preUsersRepository.save(preUsers);
+        }
+    }
+
+    private void createBoard(String typeName, String title, String content, Integer good, Users users) {
+
+        Optional<Board> optional = boardRepository.findById(0L);
+        if (optional.isEmpty()) {
+            Board board = Board.builder()
+                    .users(users)
+                    .typeName(typeName)
+                    .title(title)
+                    .content(content)
+                    .good(good)
+                    .build();
+            boardService.makeBoard(board);
         }
     }
 }
