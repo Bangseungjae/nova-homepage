@@ -1,9 +1,6 @@
 package nova.novahomepage.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Builder
 public class BusinessCard implements Serializable {
 
@@ -27,6 +25,7 @@ public class BusinessCard implements Serializable {
     private List<Skill> skills = new ArrayList<>();
     private String name;
     private String gitLink;
+    private String email;
 
     @OneToOne(mappedBy = "businessCard")
     private Users users;
