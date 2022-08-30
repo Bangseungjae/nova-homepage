@@ -32,6 +32,7 @@ public class BoardController {
     private final BoardService boardService;
     private final UsersService usersService;
 
+    @ApiOperation(value = "게시글을 쓴다")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @PostMapping("/board")
     public void makeBoard(@RequestBody BoardDto boardDto) {
@@ -49,6 +50,7 @@ public class BoardController {
         boardService.makeBoard(board);
     }
 
+    @ApiOperation(value = "게시글을 하나 선택하여 본다")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @GetMapping("/board/{id}")
     public ResponseEntity<BoardDto> getBoard(@PathVariable Long id) {
@@ -70,6 +72,7 @@ public class BoardController {
         return ResponseEntity.ok().body(boardDto);
     }
 
+    @ApiOperation(value = "게시글을 하나 지운다")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @DeleteMapping("/board/{id}")
     public ResponseEntity deleteBoard(@PathVariable Long id) {
@@ -77,6 +80,7 @@ public class BoardController {
         return ResponseEntity.ok().body(null);
     }
 
+    @ApiOperation(value = "게시글을 수정한다")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @PutMapping("/board/{id}")
     public ResponseEntity updateBoard(@PathVariable(name = "id") Long id, @RequestBody ChangeBoardDto changeBoardDto) {
