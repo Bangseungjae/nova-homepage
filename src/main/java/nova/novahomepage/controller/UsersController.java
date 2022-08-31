@@ -22,6 +22,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,9 +85,11 @@ public class UsersController {
     public ResponseEntity<ResponseLogin> login(@Valid @RequestBody LoginDto loginDto) {
         log.info("========login start========");
         ResponseLogin token = authService.authenticate(loginDto.getStudentNumber(), loginDto.getPassword());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, token.getAccessToken());
+        httpHeaders.add("USER", authentication.getAuthorities().toString());
 
         return new ResponseEntity<>(token, httpHeaders, HttpStatus.OK);
     }
