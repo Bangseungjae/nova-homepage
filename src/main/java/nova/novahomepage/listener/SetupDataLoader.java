@@ -35,7 +35,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Set<Authority> authorities2 = new HashSet<>();
         authorities2.add(new Authority(Role.ADMIN));
 //        createUserIfNotFound("방승재", "2020039110", "sj991209", 991209, authorities1);
-//        createUserIfNotFound("김상수", "2929110110", "test1234", 981209, authorities2);
+//        createUserIfNotFound("관리자", "1111111111", "nova1234", 900000, authorities2);
 
 //        createPreUserIfNotFound("나미", "2022030311", "test1234", 001234);
 //        createPreUserIfNotFound("우솝", "2051090112", "test1234", 001234);
