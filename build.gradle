@@ -97,7 +97,8 @@ jib {
 		ports = ["8080"]
 		volumes = ["/tmp"]
 		environment = [
-				"SPRING_PROFILES_ACTIVE": "prod"
+				"SPRING_PROFILES_ACTIVE": "prod",
+//				"JASYPT_ENCRYPTOR_PASSWORD":"end"
 		]
 	}
 }

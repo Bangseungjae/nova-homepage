@@ -2,9 +2,9 @@ spring:
   jpa:
     show-sql: true
     database: h2
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -13,7 +13,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   profiles:
-    active: dev
+    active: prod
 logging.level:
   org.hibernate.SQL: debug
 
