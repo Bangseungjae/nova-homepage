@@ -59,7 +59,7 @@ public class UsersController {
 
     @ApiOperation(value = "관리자가 회원가입을 승인한다, number=학번")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    @PostMapping("users/{number}")
+    @PostMapping("/users/{number}")
     public ResponseEntity signup(@PathVariable(name = "number") String studentNumber) {
         PreUsers user = preUsersService.findUser(studentNumber);
         Set<Authority> authorities = new HashSet<>();
